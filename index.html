@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #090a0c;
+      --surface: #0f1116;
+      --surface2: #14161d;
+      --border: #1c1f28;
+      --border2: #252a36;
+      --text: #cbc6c0;
+      --text-bright: #eae5df;
+      --muted: #4e5362;
+      --muted2: #717688;
+
+      --cyan: #3ecfca;
+      --cyan-dim: #1a4d4b;
+      --cyan-glow: rgba(62,207,202,0.08);
+      --amber: #e8a84a;
+      --amber-dim: #3a2e18;
+      --rose: #e06c8a;
+      --rose-dim: #3a1e28;
+      --sage: #7ec89a;
+      --sage-dim: #1e3328;
+      --lav: #9b8fe8;
+      --lav-dim: #28233a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background grid ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: -10%;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(ellipse, rgba(62,207,202,0.045) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 96px 28px 140px;
+    }
+
+    /* ── Fade-in on load ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .header        { animation: fadeUp 0.7s ease both; }
+    section:nth-of-type(1) { animation: fadeUp 0.7s 0.1s ease both; }
+    section:nth-of-type(2) { animation: fadeUp 0.7s 0.2s ease both; }
+    section:nth-of-type(3) { animation: fadeUp 0.7s 0.3s ease both; }
+
+    /* ── Header ── */
+    .header { margin-bottom: 88px; }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      font-size: 11px;
+      color: var(--muted2);
+      letter-spacing: 0.1em;
+    }
+
+    .eyebrow-line {
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    .name {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(44px, 8vw, 72px);
+      line-height: 1.0;
+      color: var(--text-bright);
+      margin-bottom: 10px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .name-sub {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(44px, 8vw, 72px);
+      line-height: 1.0;
+      font-style: italic;
+      color: var(--cyan);
+      margin-bottom: 32px;
+      display: block;
+    }
+
+    .tagline {
+      color: var(--muted2);
+      font-size: 13px;
+      max-width: 380px;
+      line-height: 1.9;
+      margin-bottom: 28px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .availability {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--sage);
+      background: rgba(126,200,154,0.07);
+      border: 1px solid rgba(126,200,154,0.18);
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--sage);
+      flex-shrink: 0;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(126,200,154,0.4); }
+      50%       { opacity: 0.5; box-shadow: 0 0 0 5px rgba(126,200,154,0); }
+    }
+
+    .location {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Section chrome ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    section { margin-bottom: 72px; }
+
+    /* ── Education ── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) { .edu-grid { grid-template-columns: 1fr; } }
+
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+
+    .edu-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .edu-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      opacity: 0.6;
+    }
+
+    .edu-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .edu-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-bright);
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .edu-meta {
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
+    .edu-grade {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--amber);
+      background: rgba(232,168,74,0.08);
+      border: 1px solid rgba(232,168,74,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .edu-ongoing {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--muted2);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* ── Projects ── */
+    .projects { display: flex; flex-direction: column; gap: 16px; }
+
+    .project {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+
+    .project:hover {
+      border-color: var(--border2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+
+    .project:hover .project-arrow {
+      transform: translate(3px, -3px);
+      opacity: 1;
+    }
+
+    .project:hover .project-glow {
+      opacity: 1;
+    }
+
+    .project-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.35s;
+      pointer-events: none;
+    }
+
+    .project.cafe .project-glow    { background: radial-gradient(ellipse at top left, rgba(232,168,74,0.05), transparent 60%); }
+    .project.startup .project-glow { background: radial-gradient(ellipse at top left, rgba(155,143,232,0.05), transparent 60%); }
+    .project.hvac .project-glow    { background: radial-gradient(ellipse at top left, rgba(62,207,202,0.05), transparent 60%); }
+
+    .project-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .project-title-group { flex: 1; }
+
+    .project-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 21px;
+      font-weight: 400;
+      color: var(--text-bright);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .project-url {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .project:hover .project-url { color: var(--muted2); }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .project-date {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .project-arrow {
+      font-size: 16px;
+      color: var(--muted2);
+      transition: transform 0.25s, opacity 0.25s;
+      opacity: 0.5;
+      line-height: 1;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      border: 1px solid;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .tag.cyan   { color: var(--cyan);   border-color: var(--cyan-dim);  background: rgba(62,207,202,0.06); }
+    .tag.amber  { color: var(--amber);  border-color: var(--amber-dim); background: rgba(232,168,74,0.06); }
+    .tag.rose   { color: var(--rose);   border-color: var(--rose-dim);  background: rgba(224,108,138,0.06); }
+    .tag.sage   { color: var(--sage);   border-color: var(--sage-dim);  background: rgba(126,200,154,0.06); }
+    .tag.lav    { color: var(--lav);    border-color: var(--lav-dim);   background: rgba(155,143,232,0.06); }
+    .tag.plain  { color: var(--muted2); border-color: var(--border);    background: var(--surface2); }
+
+    /* Accent bar per project */
+    .project::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px;
+      height: 100%;
+      border-radius: 12px 0 0 12px;
+    }
+
+    .project.cafe::after    { background: linear-gradient(180deg, var(--amber), transparent); }
+    .project.startup::after { background: linear-gradient(180deg, var(--lav), transparent); }
+    .project.hvac::after    { background: linear-gradient(180deg, var(--cyan), transparent); }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 480px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .contact-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .contact-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+
+    .contact-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .contact-value {
+      font-size: 12px;
+      color: var(--cyan);
+      word-break: break-all;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 80px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--border2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        portfolio
+      </div>
+      <h1 class="name">
+        Hi, I'm
+        <span class="name-sub">your name.</span>
+      </h1>
+      <p class="tagline">
+        Maths undergrad at PSMO College.<br />
+        Writing code on the side — mostly web.
+      </p>
+      <div class="status-row">
+        <div class="availability">
+          <span class="dot"></span>
+          open to work
+        </div>
+        <span class="location">Kannur, Kerala · remote</span>
+      </div>
+    </header>
+
+    <section>
+      <p class="section-label">Education</p>
+      <div class="edu-grid">
+        <div class="edu-card">
+          <p class="edu-label">Plus Two</p>
+          <p class="edu-name">Computer Science</p>
+          <p class="edu-meta">Kerala State Board</p>
+          <span class="edu-grade">97.3%</span>
+        </div>
+        <div class="edu-card">
+          <p class="edu-label">Undergraduate</p>
+          <p class="edu-name">BSc Mathematics</p>
+          <p class="edu-meta">PSMO College, Tirurangadi</p>
+          <span class="edu-ongoing">ongoing</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="section-label">Work</p>
+      <div class="projects">
+
+        <a class="project cafe" href="https://zebacakes.in" target="_blank" rel="noopener">
+          <div class="project-glow"></div>
+          <div class="project-top">
+            <div class="project-title-group">
+              <p class="project-title">Café Website</p>
+              <p class="project-url">zebacakes.in</p>
+            </div>
+            <div class="project-meta">
+              <span class="project-date">2026</span>
+              <span class="project-arrow">↗</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Built from scratch. Real-time menu updates, WhatsApp ordering, and staff auth.
+            Runs on Cloudflare Workers with a D1 SQLite database at the edge.
+          </p>
+          <div class="tags">
+            <span class="tag cyan">SvelteKit</span>
+            <span class="tag amber">Cloudflare Workers</span>
+            <span class="tag sage">D1 / SQLite</span>
+            <span class="tag plain">WhatsApp API</span>
+          </div>
+        </a>
+
+        <a class="project startup" href="https://hawwawellness.com" target="_blank" rel="noopener">
+          <div class="project-glow"></div>
+          <div class="project-top">
+            <div class="project-title-group">
+              <p class="project-title">Wellness Startup</p>
+              <p class="project-url">dev.hawwawellness.com</p>
+            </div>
+            <div class="project-meta">
+              <span class="project-date">2026</span>
+              <span class="project-arrow">↗</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Helped build a web application for a Qatar-based wellness startup.
+            Worked as part of a small team.
+          </p>
+          <div class="tags">
+            <span class="tag lav">Web App</span>
+            <span class="tag plain">Qatar</span>
+          </div>
+        </a>
+
+        <a class="project hvac" href="https://primevoltac.com" target="_blank" rel="noopener">
+          <div class="project-glow"></div>
+          <div class="project-top">
+            <div class="project-title-group">
+              <p class="project-title">HVAC Landing Page</p>
+              <p class="project-url">primevoltac.com</p>
+            </div>
+            <div class="project-meta">
+              <span class="project-date">2025</span>
+              <span class="project-arrow">↗</span>
+            </div>
+          </div>
+          <p class="project-desc">
+            Redesigned the landing page for an HVAC company based in Qatar.
+          </p>
+          <div class="tags">
+            <span class="tag rose">Frontend</span>
+            <span class="tag plain">Qatar</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section>
+      <p class="section-label">Contact</p>
+      <div class="contact-grid">
+        <a class="contact-card" href="mailto:you@email.com">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">m.sadique@trendzapps.com</span>
+        </a>
+        <a class="contact-card" href="https://github.com/ghasaqillayl" target="_blan" rel="noopener">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">github.com/ghasaqillayl</span>
+        </a>
+        <a class="contact-card" href="https://linkedin.com/in/ghasaqillayl" target="_blank" rel="noopener">
+          <span class="contact-label">LinkedIn</span>
+          <span class="contact-value">linkedin.com/in/ghasaqillayl</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      available remotely · Malappuram, Kerala
+    </footer>
+
+  </div>
+</body>
+</html>
